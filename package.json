@@ -1,0 +1,47 @@
+{
+  "name": "allocator-token-risk-harness",
+  "version": "0.1.0",
+  "description": "Risk-weighted token-efficiency harness for routing between local and OpenAI-compatible frontier models.",
+  "author": "Katrina Li <katrina.li.columbia@gmail.com>",
+  "repository": "https://github.com/katlicolumbia-a11y/allocator-token-risk-harness",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "token-efficiency",
+    "risk-weighting",
+    "model-router",
+    "llama.cpp"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/router.ts"
+    ]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test:py": "scripts/dev-python.sh -m pytest tests",
+    "test": "npm run typecheck && npm run test:py",
+    "eval:mock": "scripts/dev-python.sh -m evals.run_router_evals --mock",
+    "eval:live": "scripts/dev-python.sh -m evals.run_router_evals --server-url ${ROUTER_LOCAL_BASE_URL:-http://127.0.0.1:8080/v1}"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-ai": {
+      "optional": true
+    },
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "0.80.2",
+    "@earendil-works/pi-coding-agent": "0.80.2",
+    "@types/node": "24.12.4",
+    "typescript": "5.9.3"
+  }
+}
