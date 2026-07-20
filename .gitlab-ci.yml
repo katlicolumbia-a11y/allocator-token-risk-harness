@@ -1,0 +1,16 @@
+stages:
+  - test
+
+copyright_guard:
+  stage: test
+  image: python:3.12-alpine
+  script:
+    - python3 scripts/verify_copyright.py
+
+python_tests:
+  stage: test
+  image: python:3.12
+  before_script:
+    - pip install -r requirements-mock.txt
+  script:
+    - PYTHONPATH=. pytest

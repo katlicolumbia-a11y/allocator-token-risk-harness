@@ -1,0 +1,8 @@
+# Ownership-sensitive files deliberately name the sole repository owner.
+* @katlicolumbia-a11y
+/.github/CODEOWNERS @katlicolumbia-a11y
+/.github/workflows/ @katlicolumbia-a11y
+/LICENSE @katlicolumbia-a11y
+/COPYRIGHT.md @katlicolumbia-a11y
+/NOTICE @katlicolumbia-a11y
+/scripts/verify_copyright.py @katlicolumbia-a11y
