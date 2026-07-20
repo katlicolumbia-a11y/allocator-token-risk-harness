@@ -1,16 +1,59 @@
 # Allocator Token Risk Harness
 
-A risk-weighted token-efficiency harness by **Katrina Li**. It routes each request between local and frontier models according to confidence, entropy, expected cost, and reliability requirements.
+**An execution primitive for allocating intelligence according to consequence, by Katrina Li.**
 
-The harness first asks a local model whether a request is safe for local handling. When that probe passes, it generates a short local answer with log probabilities enabled and measures token entropy plus top-1 confidence. High-confidence work stays local; uncertain or high-risk work escalates to any OpenAI-compatible remote endpoint.
+This repository implements one working layer of the architecture developed in Katrina Li's July 2026 paper, **_Allocating Intelligence: Risk-Weighted Harnesses and Portfolio-Level Control for the Agent Economy_**.
 
-## Why it exists
+The larger thesis is not that model selection needs another router. It is that enterprises operating long-horizon agents need a portfolio-level control plane: a system that allocates compute, money, verification, and autonomy across a digital workforce according to **verified marginal value** and the downstream cost of failure.
 
-- Reduce frontier-token consumption without applying one model to every task.
-- Keep low-risk, high-confidence requests on local infrastructure.
-- Escalate uncertain work when reliability matters more than marginal cost.
-- Produce visible routing traces for evaluation and tuning.
-- Support capacity-aware local inference and a configurable remote fallback.
+## The thesis: put a live price on being wrong
+
+Difficulty and consequence are different quantities. Difficulty helps determine which model may be capable of producing an answer. Consequence — the decision's **blast radius** — measures what the system stands to lose if that answer is wrong.
+
+In the full Allocator.os architecture, each claim, assumption, tool result, and decision is a node in a causal execution graph. Its blast radius is the downstream work it can invalidate. That makes verification an allocation decision:
+
+- High-blast-radius nodes buy stronger inference, independent re-derivation, additional compute, or human review.
+- Low-blast-radius nodes use cheaper or local execution, cache reuse, and proportionate checks.
+- Failed verification halts only the affected downstream frontier rather than forcing a complete replay.
+- Verified outcomes update each agent's budget, permissions, and earned-autonomy level.
+
+The target metric is therefore not dollars per million tokens. It is **cost per verified successful outcome**, penalized by downstream error impact, recovery cost, latency, and human intervention.
+
+## Where this repository fits
+
+This harness is the model-execution actuator inside that broader control plane. It answers a bounded question: **is the local tier sufficiently reliable for this step, or should execution escalate without losing the conversation?**
+
+The current implementation:
+
+- asks a local route probe whether the requested work is safe for local handling;
+- samples a local completion with log probabilities;
+- measures average and tail token entropy, top-1 probability, and composite confidence;
+- keeps the work local only when every configured reliability gate clears;
+- escalates uncertain work to any OpenAI-compatible stronger endpoint;
+- preserves conversation state across the handoff;
+- emits structured route decisions and visible traces for evaluation; and
+- supports explicit fail-open behavior when the local decision service is unavailable.
+
+The harness deliberately makes reliability thresholds configurable. In a complete Allocator deployment, an upstream causal ledger would set those thresholds from the step's blast radius, budget, latency requirement, data-egress policy, agent history, and required reliability. A confident answer can still require independent verification when its blast radius is large; uncertainty alone is not a complete risk model.
+
+## Implemented here versus the full control plane
+
+| Implemented in this repository | Broader Allocator.os architecture |
+| --- | --- |
+| Local suitability probe | Task decomposition and agent mandates |
+| Entropy, top-1, and confidence gates | Causal dependency graph and live blast radius |
+| Local-to-stronger-tier escalation | Risk-priced verification and human gates |
+| Conversation-preserving handoff | Operational halt and selective revalidation |
+| Route traces and calibration cases | Per-agent P&L, budgets, permissions, and earned autonomy |
+| Configurable reliability thresholds | Portfolio allocation by verified marginal value |
+
+This distinction is intentional: the code here validates a crucial execution mechanism without claiming that a two-tier dispatcher is the entire system described by the paper.
+
+## Why it matters beyond routing
+
+Long-horizon reliability is multiplicative. Even high per-step accuracy can collapse across a workflow with dozens or hundreds of dependent decisions. Running every step on the most expensive model does not solve that structural problem; it raises cost while still treating all errors as equally consequential.
+
+Allocator's design instead treats intelligence like risk capital. The ledger decides where failure would propagate, the harness supplies the appropriate execution tier, verification is concentrated at the dangerous nodes, and outcomes feed back into future allocations. Model routing is a component. **The product thesis is control over a workforce of agents.**
 
 ## Setup
 
