@@ -1,5 +1,7 @@
 # Allocator Token Risk Harness
 
+> **Interactive Allocator.os demo:** [https://agent-allocator-landing-3b12ae.gitlab.io/](https://agent-allocator-landing-3b12ae.gitlab.io/)
+
 **An execution primitive for allocating intelligence according to consequence, by Katrina Li.**
 
 This repository implements one working layer of the architecture developed in Katrina Li's July 2026 paper, **_Allocating Intelligence: Risk-Weighted Harnesses and Portfolio-Level Control for the Agent Economy_**.
